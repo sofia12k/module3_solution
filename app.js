@@ -44,25 +44,17 @@ function NarrowItDownController(MenuSearchService) {
   };
 }
 
-MenuSearchService.$inject = ['$http'];
-function MenuSearchService($http) {
-  var service = this;
-
-  service.getMatchedMenuItems = function (searchTerm) {
-    return $http({
-      method: "GET",
-      url: "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"
-    }).then(function (response) {
-      const data = response.data;
-      const menuItems = data.menu_items || data;
-      const allItems = Object.values(menuItems);
-
-      return allItems.filter(item =>
-        item.description &&
-        item.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    });
-  };
-}
-
+MenuSearchService.getMatchedMenuItems = function (searchTerm) {
+  return $http({
+    method: "GET",
+    url: "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"
+  }).then(function (response) {
+    const data = response.data;
+    const menuItems = Array.isArray(data.menu_items) ? data.menu_items : Object.values(data.menu_items);
+    const foundItems = menuItems.filter(item =>
+      item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    return foundItems;
+  });
+};
 })();
