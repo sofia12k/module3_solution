@@ -49,14 +49,15 @@
     var service = this;
 
     service.getMatchedMenuItems = function (searchTerm) {
+      // Change this line to read data from the local JSON file
       return $http({
         method: "GET",
-        url: "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"
+        url: "menu_items.json" // local path to the JSON file
       }).then(function (response) {
         const data = response.data;
 
-        // Log the raw response from Firebase to confirm the structure
-        console.log("Firebase raw response:", data);
+        // Log the raw response to see the data structure
+        console.log("Loaded data:", data);
 
         // Initialize an empty array to hold all menu items
         const allMenuItems = [];
@@ -72,7 +73,7 @@
           }
         }
 
-        // Log the combined menu items array after adding items from all categories
+        // Log the combined menu items array
         console.log("All menu items:", allMenuItems);
 
         // Filter the items by description to match the search term
