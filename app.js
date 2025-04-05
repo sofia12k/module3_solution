@@ -51,23 +51,36 @@ MenuSearchService.getMatchedMenuItems = function (searchTerm) {
   }).then(function (response) {
     const data = response.data;
 
-    // Log the raw response from Firebase
+    // Log the raw response to see the structure of the data
     console.log("Firebase raw response:", data);
 
-    const menuItems = Array.isArray(data.menu_items) ? data.menu_items : Object.values(data.menu_items);
+    // Initialize an empty array to store all the menu items
+    const allMenuItems = [];
 
-    // Log the extracted list of items
-    console.log("Extracted menuItems array:", menuItems);
+    // Loop through each category (A, B, etc.)
+    for (let categoryKey in data) {
+      if (data.hasOwnProperty(categoryKey)) {
+        // Add the menu items from each category to the allMenuItems array
+        allMenuItems.push(...data[categoryKey].menu_items);
+      }
+    }
 
-    const foundItems = menuItems.filter(item =>
+    // Log the combined array of menu items
+    console.log("All menu items:", allMenuItems);
+
+    // Filter items by the searchTerm
+    const foundItems = allMenuItems.filter(item =>
       item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Log the final filtered list
+    // Log the filtered foundItems
     console.log("Filtered foundItems:", foundItems);
 
     return foundItems;
+  }).catch(function (error) {
+    console.error("Error fetching data:", error);
   });
 };
+
 
 })();
