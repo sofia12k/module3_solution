@@ -34,8 +34,11 @@
 
       MenuSearchService.getMatchedMenuItems(ctrl.searchTerm)
         .then(function (items) {
-          ctrl.found = items;
-          ctrl.nothingFound = items.length === 0;
+          ctrl.found = items; // Assign the filtered items to the found array
+          ctrl.nothingFound = items.length === 0; // Set the flag if no items found
+        })
+        .catch(function (error) {
+          console.error("Error in narrowing down items:", error);
         });
     };
 
@@ -49,40 +52,33 @@
     var service = this;
 
     service.getMatchedMenuItems = function (searchTerm) {
-      // Change this line to read data from the local JSON file
       return $http({
         method: "GET",
         url: "menu_items.json" // local path to the JSON file
       }).then(function (response) {
         const data = response.data;
 
-        // Log the raw response to see the data structure
-        console.log("Loaded data:", data);
+        console.log("Loaded data:", data); // Check if data is loaded correctly
 
-        // Initialize an empty array to hold all menu items
         const allMenuItems = [];
 
         // Loop through each category (A, B, etc.) to get menu items
         for (let categoryKey in data) {
           if (data.hasOwnProperty(categoryKey)) {
             const category = data[categoryKey];
-            // Check if menu_items exist and push them to allMenuItems
             if (category.menu_items && Array.isArray(category.menu_items)) {
               allMenuItems.push(...category.menu_items);
             }
           }
         }
 
-        // Log the combined menu items array
-        console.log("All menu items:", allMenuItems);
+        console.log("All menu items:", allMenuItems); // Check if all items are combined correctly
 
-        // Filter the items by description to match the search term
         const foundItems = allMenuItems.filter(item =>
           item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
-        // Log the filtered foundItems
-        console.log("Filtered foundItems:", foundItems);
+        console.log("Filtered foundItems:", foundItems); // Check if filtering works
 
         return foundItems;
       }).catch(function (error) {
