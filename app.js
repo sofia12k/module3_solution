@@ -50,11 +50,24 @@ MenuSearchService.getMatchedMenuItems = function (searchTerm) {
     url: "https://coursera-jhu-default-rtdb.firebaseio.com/menu_items.json"
   }).then(function (response) {
     const data = response.data;
+
+    // Log the raw response from Firebase
+    console.log("Firebase raw response:", data);
+
     const menuItems = Array.isArray(data.menu_items) ? data.menu_items : Object.values(data.menu_items);
+
+    // Log the extracted list of items
+    console.log("Extracted menuItems array:", menuItems);
+
     const foundItems = menuItems.filter(item =>
       item.description && item.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    // Log the final filtered list
+    console.log("Filtered foundItems:", foundItems);
+
     return foundItems;
   });
 };
+
 })();
